@@ -1,0 +1,55 @@
+server:
+  port: 2001
+
+spring:
+  application:
+    name: seata-storage-service
+  cloud:
+    alibaba:
+      seata:
+        tx-service-group: fsp_tx_group
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/seata_storage
+    username: root
+    password: 123456
+
+logging:
+  level:
+    io:
+      seata: info
+
+mybatis:
+  mapperLocations: classpath:mapper/*.xml
+
+seata:
+  tx-service-group: fsp_tx_group
+  service:
+    vgroup-mapping:
+      fsp_tx_group: default
+  registry:
+    type: nacos
+    nacos:
+      server-addr: localhost:8848
+      application: seata-server
+      group: SEATA_GROUP
+  config:
+    type: nacos
+    nacos:
+      application: seata-server
+      server-addr: 127.0.0.1:8848
+      group: "SEATA_GROUP"
+      namespace: "c75a3c87-df77-4a20-9b7d-e5d7fe9eaaca"
+      username: "nacos"
+      password: "nacos"
+
+#
+#seata.tx-service-group=fsp_tx_group ---------------> 事务分组配置（在v1.5之后默认值为default_tx_group）
+#seata.service.vgroup-mapping.fsp_tx_group=default  ---------------> 指定事务分组至集群映射关系（等号右侧的集群名需要与Seata-server注册到Nacos的cluster保持一致）
+#seata.registry.type=nacos      ---------------> 使用nacos作为注册中心
+#seata.registry.nacos.server-addr=localhost:8848
+#seata.registry.nacos.application=seata-server     ---------------> Seata服务名（应与seata-server实际注册的服务名一致）
+#seata.registry.nacos.group=SEATA_GROUP            ---------------> Seata分组名（应与seata-server实际注册的分组名一致）
